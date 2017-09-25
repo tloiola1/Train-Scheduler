@@ -18,15 +18,29 @@
     
     <script src="http://momentjs.com/downloads/moment.js"></script>
     <script type="text/javascript">
-            var a = parseInt("45");
-            var b = moment.duration(a, 'minutes').asMinutes();
-            var c = moment().format('mm');
-            console.log(a);
-            console.log(c);
-            if(a<c){a+=a;}
-            var d = a - c;
-            console.log(d);
 
+// STOPWATCH ACTIVITY (SOLUTION)
+// =============================
+
+
+  var min = moment().format("mm");
+  console.log(min);
+  var sec = moment().format("ss");
+  console.log(sec);
+    
+
+var clock = setInterval(my_clock, 1000);
+
+function my_clock() {
+    sec++;
+    console.log(sec);
+    if(sec === 60){
+        sec = 0;
+        min -= 1;
+        console.log(min);
+    }
+
+}
 
     </script>
 </body>

@@ -1,3 +1,30 @@
+html, body{
+	font-family: 'Arial','Bitter';
+}
+.jumbotron{
+	background-color: inherit;
+	padding-bottom: 0;
+}
 input{
 	width: 100%;
+}
+
+#localTime{
+	float: right;
+	padding: 15px;
+	color:white;
+	background-color: #E74C3C;
+	font-size: 20px;
+	clear: both;
+	margin-bottom: 0;
+}
+
+@media screen and (max-width: 480px){
+	h1{
+		font-size: 40px; 
+	}
+	#localTime{
+		float: left;
+		font-size: 17px;
+	}
 }

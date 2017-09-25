@@ -1,10 +1,13 @@
 
-    // Initial Values
+    var has_input = true;
+    var input_quantity = 4;
     var name = "";
     var dest = "";
     var first_train_time = "";
     var freq = "";
     var date = "";
+    var min = 0;
+    var sec = moment().format("ss");
     // Initialize Firebase
     var config = {
       apiKey: "AIzaSyCanlYIc7n-Wel8wDeaMxMzYtViVVCOwpI",
@@ -22,6 +25,21 @@
 
     // Capture Button Click
     $("#submitButton").on("click", function(event) {
+
+      has_input = true;
+      for(var i = 0; i < input_quantity; i++){
+        if($(".a"+i).val() === ""){
+          has_input = false;
+        }
+      }
+      if(has_input === false){
+        clear();
+      }
+      else if(has_input === true){
+        store();
+      }
+
+      function store(){
       event.preventDefault();
 
       // Grabbed values from text boxes
@@ -40,9 +58,13 @@
         //
         // dateAdded: firebase.database.ServerValue.TIMESTAMP
       });
-
+      }
+      clear();
     });
 
+    function display(){
+      $("#tr").empty();
+  
     // Firebase watcher + initial loader + order/limit HINT: .on("child_added")
     //.on("child_added") push Function is looking for an event child_added
     database.ref().on("child_added", function(childSnapshot) {
@@ -53,32 +75,34 @@
       var sv = childSnapshot.val();
 
         // calculating how many minutes awys is the next train
-        var minutes_away = 0;
         var a = parseInt(sv.freq);
         var b = parseInt(moment().format('mm'));
         if(a<b){a+=a;}
         var c = a - b;
-        if(c === 0){
-            minutes_away = c.toSrting();
-            minutes_away = "Boarding";
-        }
-        else if(c === 1){
-            minutes_away = c.toString();
-            minutes_away = "Arriving";
-        }
-        else{
-            minutes_away = c;
-        }
+        min = c;
 //---------------------------------------------
 
         var x = moment().format("hh:mm");
-        
-        var y = moment.duration(sv.first_train_time).asMinutes();
         var z = moment.duration(x).asMinutes();
-        z = z + minutes_away;
+        var y = moment.duration(sv.first_train_time).asMinutes();
+        z = z + c;
+
+        time = moment().format("mm");
 
         var h = z / 60 | 0;
-        var m = z % 60;
+        h += 12;
+        var m = (z % 60);
+        if(h +":"+ m < moment().format("HH:mm")){
+          m = m + parseInt(sv.freq);
+          m = (m % 60);
+          h+=1
+        }
+        if(min < 0){
+          min = m * -1;
+        }
+
+
+        
         if(m === 0){
             m = m.toString();
             m = "00";
@@ -86,110 +110,37 @@
 
 
 
-
+      if(has_input === true){
       $("#tr").prepend("<tr><td>"+sv.name+"</td>"
       +"<td>"+sv.dest+"</td>"
       +"<td>"+sv.freq+"</td>"
       +"<td>"+ h +":"+ m +"</td>"
-      +"<td>"+minutes_away+"</td></tr>");
-
+      +"<td>"+min+"</td></tr>");
+      }
+      else{};
 
                 
       // Handle the errors
     }, function(errorObject) {
       console.log("Errors handled: " + errorObject.code);
     });
-
-//  Variable that will hold our setInterval that runs the stopwatch
-var intervalId;
-
-//prevents the clock from being sped up unnecessarily
-var clockRunning = false;
-
-// Our stopwatch object
-var stopwatch = {
-
-  time: 0,
-  lap: 1,
-
-  reset: function() {
-
-    stopwatch.time = 0;
-    stopwatch.lap = 1;
-
-    // DONE: Change the "display" div to "00:00."
-    $("#display").html("00:00");
-
-    // DONE: Empty the "laps" div.
-    $("#laps").html("");
-  },
-  start: function() {
-
-    // DONE: Use setInterval to start the count here and set the clock to running.
-    if (!clockRunning) {
-        intervalId = setInterval(stopwatch.count, 1000);
-        clockRunning = true;
-    }
-  },
-  stop: function() {
-
-    // DONE: Use clearInterval to stop the count here and set the clock to not be running.
-    clearInterval(intervalId);
-    clockRunning = false;
-  },
-  recordLap: function() {
-
-    // DONE: Get the current time, pass that into the stopwatch.timeConverter function,
-    //       and save the result in a variable.
-    var converted = stopwatch.timeConverter(stopwatch.time);
-
-    // DONE: Add the current lap and time to the "laps" div.
-    $("#laps").append("<p>Lap " + stopwatch.lap + " : " + converted + "</p>");
-
-    // DONE: Increment lap by 1. Remember, we can't use "this" here.
-    stopwatch.lap++;
-  },
-  count: function() {
-
-    // DONE: increment time by 1, remember we cant use "this" here.
-    stopwatch.time++;
-
-    // DONE: Get the current time, pass that into the stopwatch.timeConverter function,
-    //       and save the result in a variable.
-    var converted = stopwatch.timeConverter(stopwatch.time);
-    console.log(converted);
-
-    // DONE: Use the variable we just created to show the converted time in the "display" div.
-    $("#time").html(converted);
-  },
-  timeConverter: function(t) {
-
-    var minutes = Math.floor(t / 60);
-    var seconds = t - (minutes * 60);
-
-    if (seconds < 10) {
-      seconds = "0" + seconds;
-    }
-
-    if (minutes === 0) {
-      minutes = "00";
-    }
-    else if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-
-    return minutes + ":" + seconds;
   }
-};
-   stopwatch.start(); 
-// $("#fromButtom").on("click", function(){
-    
-//     $("#fromStation").toggle();
 
-//   })
 
-// $("#toButton").on("click", function(){
-    
-//     $("#toStation").toggle();
+function clear(){
+    for(var i = 0; i < input_quantity; i++){
+          $(".a"+i).val("");
+        }
+  }
+var clock = setInterval(my_clock, 1000);
+  function my_clock() {
+      sec++;
+      if(sec === 60){
+          sec = 0;
+          min -= 1;
+          display();
+      }
 
-//   })
+  }
+
+  display();

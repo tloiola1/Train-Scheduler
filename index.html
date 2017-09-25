@@ -9,16 +9,22 @@
 	<!-- <link rel="stylesheet" type="text/css" href="assets/css/style.css"> -->
 	<link href="https://fonts.googleapis.com/css?family=Arial|Bitter:700" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
 	<script src="https://code.jquery.com/jquery.js"></script>
+	<script src="assets/javascript/timeDisplay.js"></script>
 </head>
 <body>
-	<header class="container jumbotron">
-		<div class="">
-			<h1>Train Schedule</h1>
-			<span><small id="time" style="float: rigth !important">Current Time</small></span>
+	<header class="container jumbotron panel">
+		<div class="panel-primary">
+			<div class="row">
+				<h1>
+					<strong>Train Scheduler</strong>
+					<div><small><strong id="localTime" class="well"></strong></small></div>
+				</h1>
+			</div>
 		</div>		
 	</header>
 	<section class="container">
@@ -31,7 +37,7 @@
 				          <th>Destination</th>
 				          <th>Frequency(min)</th>
 				          <th>Next Arrival</th>
-				          <th>Minutes Away</th>
+				          <th>Minutes Away<br><small>(Time changes every minute)</small></th>
 				        </tr>
 				      </thead>
 				      <div>
@@ -46,54 +52,53 @@
 	<section class="container">
 		<div class="row">
 			<table class="table panel panel-primary">
-				<thead class="panel-heading">
+				<thead class="panel-heading" style="padding-top: 0">
     
 					<tr>
 				        <th>
-						<button id="fromStation" class="btn btn-default" text="From">From</button>
 				        	<br>
-				        	Add Train
+				        	Add Train  <span><button id="fromStation" class="btn btn-default" text="From"><strong>Train Name</strong></button></span>
 				        </th>
 				    </tr>
 				</thead>
-				<tbody>
+
+				<tbody id="tbody">
 					<tr>
 				        <th>
 							Train Name
 							<br>
-				        	<input id="trainName" type="text" value="">
+				        	<input id="trainName" type="text" value="" class="a0">
 				        </th>
 				    </tr>
 				    <tr>
 				        <th>
 				        	Destination
 							<br>
-				        	<input id="destination" type="text" value="">
+				        	<input id="destination" type="text" value="" class="a1">
 				        </th>
 					</tr>
 					<tr>
 				        <th>
 				        	First Train Time(military time)
 							<br>
-				        	<input id="firstTrainTime" type="text" value="">
+				        	<input id="firstTrainTime" type="text" value="" class="a2">
 				        </th>
 				    </tr>
 				    <tr>
 				        <th>
 				        	Frequency(min)
 							<br>
-				        	<input id="frequency" type="text" value="">
+				        	<input id="frequency" type="text" value="" class="a3">
 				        </th>
 				    </tr>
 				    <tr>
 				        <th>
-				        	<button id="submitButton" class="btn btn-primary">Submit</button>
+				        	<button id="submitButton" class="btn btn-primary"><strong>Submit</strong></button>
 				        </th>
 				    </tr>
 				</tbody>
-			
 			</table>
-				
+			<div id="nameStations" style="display: none"></div>
 		</div>
 	</section>
 
@@ -101,9 +106,9 @@
 		<div class="form-group">
 		</div>
 	</div>
-	<!-- <img src="Train_Time_Image.png" alt=""> -->
 	<script src="http://momentjs.com/downloads/moment.js"></script>
 	<script src="assets/javascript/app.js"></script>
+	<script src="assets/javascript/stations.js"></script>
 </body>
 </html>
 
