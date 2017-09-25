@@ -90,7 +90,6 @@
         time = moment().format("mm");
 
         var h = z / 60 | 0;
-        h += 12;
         var m = (z % 60);
         if(h +":"+ m < moment().format("HH:mm")){
           m = m + parseInt(sv.freq);
