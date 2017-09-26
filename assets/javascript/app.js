@@ -63,13 +63,10 @@
     function display(){
       $("#tr").empty();
   
-    // Firebase watcher + initial loader + order/limit HINT: .on("child_added")
-    //.on("child_added") push Function is looking for an event child_added
+    //
     database.ref().on("child_added", function(childSnapshot) {
+      
       // storing the snapshot.val() in a variable for convenience
-      // var svSize = snapshot.length;
-      // console.log(svSize);
-
       var sv = childSnapshot.val();
 
 // this block calculates time for next train
@@ -126,12 +123,13 @@
     });
   }
 
-
+// Clear the browser to prevent redundancy
 function clear(){
     for(var i = 0; i < input_quantity; i++){
           $(".a"+i).val("");
         }
   }
+//This block updateds the browser every minute
 var clock = setInterval(my_clock, 1000);
   function my_clock() {
       sec++;
@@ -142,5 +140,5 @@ var clock = setInterval(my_clock, 1000);
       }
 
   }
-
+  //Display database inputs on browser
   display();
