@@ -5,7 +5,6 @@
     var dest = "";
     var first_train_time = "";
     var freq = "";
-    var date = "";
     var min = 0;
     var sec = moment().format("ss");
     // Initialize Firebase
@@ -47,16 +46,15 @@
       dest = $("#destination").val().trim();
       first_train_time = $("#firstTrainTime").val().trim();
       freq = $("#frequency").val().trim();
-      date = moment().format('LL');
+
       // Code for handling the push
       database.ref().push({
         name: name,
         dest: dest,
         first_train_time: first_train_time,
         freq: freq,
-        date: date
         //
-        // dateAdded: firebase.database.ServerValue.TIMESTAMP
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
       });
       }
       clear();
@@ -74,49 +72,52 @@
 
       var sv = childSnapshot.val();
 
-        // calculating how many minutes awys is the next train
-        var a = parseInt(sv.freq);
-        var b = parseInt(moment().format('mm'));
-        if(a<b){a+=a;}
-        var c = a - b;
-        min = c;
-//---------------------------------------------
-
-        var x = moment().format("hh:mm");
-        var z = moment.duration(x).asMinutes();
-        var y = moment.duration(sv.first_train_time).asMinutes();
-        z = z + c;
-
-        time = moment().format("mm");
-
-        var h = z / 60 | 0;
-        var m = (z % 60);
-        if(h +":"+ m < moment().format("HH:mm")){
-          m = m + parseInt(sv.freq);
-          m = (m % 60);
-          h+=1
-        }
-        if(min < 0){
-          min = m * -1;
+// this block calculates time for next train
+        var a = moment().format("HH:mm");
+        var b = moment.duration(a).asMinutes();
+        var c =  moment.duration(sv.first_train_time).asMinutes();
+        var d = parseInt(sv.freq);
+        var next_train;
+        if(c > b){
+          do{
+            c -= d;
+          }while(c > b + d);
+          var h = c / 60 | 0,
+              m = c % 60 | 0;
+          if(m === 0){
+          m = m.toString();
+          m = "00";
+          }
+          next_train = h+":"+m;
         }
 
-
-        
-        if(m === 0){
-            m = m.toString();
-            m = "00";
+        else if(c < b){
+          do{
+            c += d;
+          }while(c < b);
+          var h = c / 60 | 0,
+              m = c % 60 | 0;
+          if(m === 0){
+          m = m.toString();
+          m = "00";
         }
+          next_train = h+":"+m;
+        }
+//------------------------------------
 
-
+// this block calculates for next train minutes away 
+        var subThis = moment.duration(next_train).asMinutes();
+        min = subThis - b;
+//--------------------------------------------------
 
       if(has_input === true){
       $("#tr").prepend("<tr><td>"+sv.name+"</td>"
       +"<td>"+sv.dest+"</td>"
       +"<td>"+sv.freq+"</td>"
-      +"<td>"+ h +":"+ m +"</td>"
+      +"<td>"+next_train+"</td>"
       +"<td>"+min+"</td></tr>");
       }
-      else{};
+      // else{};
 
                 
       // Handle the errors
