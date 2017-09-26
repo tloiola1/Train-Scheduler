@@ -24,7 +24,6 @@
 
     // Capture Button Click
     $("#submitButton").on("click", function(event) {
-
       has_input = true;
       for(var i = 0; i < input_quantity; i++){
         if($(".a"+i).val() === ""){
@@ -60,9 +59,7 @@
       clear();
     });
 
-    function display(){
-      $("#tr").empty();
-  
+    function display(){  
     //
     database.ref().on("child_added", function(childSnapshot) {
       

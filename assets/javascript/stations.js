@@ -29,7 +29,7 @@ var test = true;
         });
     });
 
-$("#fromStation").on("click", function(){
+$("#addTrain").on("click", function(){
 	$("#tbody").toggle();
 	$("#nameStations").toggle();
 })
@@ -39,12 +39,12 @@ $(document).on("click", "#stat", function(evevnt){
 	console.log(a);
 	if(test === true){	
 		$("#trainName").val(a); 
-		$("#fromStation").html("Destination");
+		$("#addTrain").html("Destination");
 		test=false;
 	}
 	else if(test === false){
 		$("#destination").val(a); 
-		$("#fromStation").html("Train Name");
+		$("#addTrain").html("Train Name");
 		test=true;
 	}
 	$("#tbody").toggle();
