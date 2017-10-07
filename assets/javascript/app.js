@@ -21,10 +21,11 @@
     // Create a variable to reference the database.
     var database = firebase.database();
 
-
+    // document.
     // Capture Button Click
     $("#submitButton").on("click", function(event) {
-      has_input = true;
+    	$("#tr").empty();
+	has_input = true;
       for(var i = 0; i < input_quantity; i++){
         if($(".a"+i).val() === ""){
           has_input = false;
@@ -35,6 +36,7 @@
       }
       else if(has_input === true){
         store();
+        
       }
 
       function store(){
@@ -60,6 +62,8 @@
     });
 
     function display(){  
+    	$("#tr").empty();
+      clear();
     //
     database.ref().on("child_added", function(childSnapshot) {
       
@@ -73,45 +77,63 @@
         var d = parseInt(sv.freq);
         var next_train;
         if(c > b){
-          do{
-            c -= d;
-          }while(c > b + d);
-          var h = c / 60 | 0,
-              m = c % 60 | 0;
-          if(m === 0){
-          m = m.toString();
-          m = "00";
-          }
-          next_train = h+":"+m;
+			do{
+			c -= d;
+			}while(c > b + d);
+			c += d;
+			var h = c / 60 | 0,
+			  	m = c % 60 | 0;
+			if(m === 0){
+			m = m.toString();
+			m = "00";
+			}
+			else if(m < 10 && m > 0){
+				m = m.toString();
+				m = "0" + m;
+			}
+		next_train = h+":"+m;
         }
 
         else if(c < b){
-          do{
-            c += d;
-          }while(c < b);
-          var h = c / 60 | 0,
-              m = c % 60 | 0;
-          if(m === 0){
-          m = m.toString();
-          m = "00";
+			do{
+			c += d;
+			}while(c < b);
+			var h = c / 60 | 0,
+			  	m = c % 60 | 0;
+        if(m === 0){
+			m = m.toString();
+			m = "00";
         }
-          next_train = h+":"+m;
+        else if(m < 10 && m > 0){
+				m = m.toString();
+				m = "0" + m;
+			}
+        next_train = h+":"+m;
         }
 //------------------------------------
 
 // this block calculates for next train minutes away 
         var subThis = moment.duration(next_train).asMinutes();
         min = subThis - b;
-//--------------------------------------------------
+        h = min / 60 | 0,
+		m = min % 60 | 0;
+		if(m === 0){
+			m = m.toString();
+			m = "00";
+			}
+			else if(m < 10 && m > 0){
+				m = m.toString();
+				m = "0" + m;
+			}
+		min = h+":"+m;
 
-      if(has_input === true){
+//--------------------------------------------------
+		
       $("#tr").prepend("<tr><td>"+sv.name+"</td>"
       +"<td>"+sv.dest+"</td>"
       +"<td>"+sv.freq+"</td>"
       +"<td>"+next_train+"</td>"
       +"<td>"+min+"</td></tr>");
-      }
-      // else{};
 
                 
       // Handle the errors
@@ -130,6 +152,7 @@ function clear(){
 var clock = setInterval(my_clock, 1000);
   function my_clock() {
       sec++;
+      // console.log(sec);
       if(sec === 60){
           sec = 0;
           min -= 1;
